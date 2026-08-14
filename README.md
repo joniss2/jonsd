@@ -11,36 +11,62 @@ npm install
 ## Usage
 
 ```js
-// CommonJS
-const catalog = require('./node_modules/awesome-mac/dist/awesome-mac.json');
-
-// ESM (Node ≥ 22)
-import catalog from 'awesome-mac' with { type: 'json' };
+const { categories, getCategory, search, filterByIcon } = require('jonsd');
 ```
 
-The catalog is a flat array of [Remark](https://github.com/remarkjs/remark) Markdown AST nodes. Category headings sit at depth 2, sub-category headings at depth 3. Each application entry is a `listItem` node whose `mark` object carries:
+### API
+
+#### `categories() → string[]`
+
+Returns all top-level category names.
+
+```js
+categories();
+// ['Reading and Writing Tools', 'Developer Tools', 'Terminal Apps', ...]
+```
+
+#### `getCategory(name) → mark[]`
+
+Returns all apps in a named category (case-insensitive). Returns `[]` if the category is not found.
+
+```js
+getCategory('Browsers');
+// [{ title: 'Arc', url: '...', icons: [...] }, ...]
+```
+
+#### `search(query) → mark[]`
+
+Returns all apps whose title contains `query` (case-insensitive substring).
+
+```js
+search('git');
+// [{ title: 'GitKraken', url: '...', icons: [...] }, ...]
+```
+
+#### `filterByIcon(type) → mark[]`
+
+Returns all apps tagged with a given icon type.
+
+| Type | Meaning |
+|---|---|
+| `'oss'` | Open-source |
+| `'freeware'` | Free to use |
+| `'app-store'` | Available on the Mac App Store |
+| `'awesome-list'` | Featured in another awesome list |
+
+```js
+filterByIcon('oss').length; // ~400
+```
+
+#### `catalog`
+
+The raw [Remark](https://github.com/remarkjs/remark) AST array from `awesome-mac`. Category headings are depth-2 nodes; each app is a `listItem` whose inner paragraph carries a `mark` object:
 
 | Field | Description |
 |---|---|
 | `mark.title` | Application name |
 | `mark.url` | Homepage or download URL |
-| `mark.icons` | Array of badge strings: `oss`, `freeware`, `appstore` |
-
-### Filter by category
-
-```js
-// Find the "Developer Tools" heading, then collect its listItem children
-const nodes = catalog; // flat AST array
-const idx = nodes.findIndex(n => n.type === 'heading' && n.depth === 2
-  && n.children?.[0]?.value === 'Developer Tools');
-const items = [];
-for (let i = idx + 1; i < nodes.length; i++) {
-  if (nodes[i].type === 'heading' && nodes[i].depth <= 2) break;
-  if (nodes[i].type === 'list') {
-    nodes[i].children.forEach(li => items.push(li.mark));
-  }
-}
-```
+| `mark.icons` | `[{ type, url }]` — badge entries |
 
 ## Locale catalogs
 

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "jonsd Architecture",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/joniss2/jonsd",
+      "revision": "cbfb3c346eee1dcc05a35dd9854fc7225c11ad0f"
+    }
+  },
+  "components": [
+    { "id": "consumer",        "type": "external",  "label": "Consumer App",   "sublabel": "CJS or ESM",                  "pos": [40,  190], "size": [150, 56] },
+    { "id": "npm_registry",    "type": "cloud",     "label": "npm Registry",   "sublabel": "registry.npmjs.org",           "pos": [340,  40], "size": [180, 56] },
+    { "id": "jonsd",           "type": "frontend",  "label": "jonsd",          "sublabel": "Node.js package",             "pos": [240, 190], "size": [160, 60], "sources": [{ "path": "package.json" }] },
+    { "id": "awesome_mac",     "type": "backend",   "label": "awesome-mac",    "sublabel": "v2.1.0 · CC-BY-SA-4.0",      "pos": [460, 190], "size": [190, 60] },
+    { "id": "en_catalog",      "type": "database",  "label": "EN Catalog",     "sublabel": "awesome-mac.json · 511 KB",   "pos": [360, 330], "size": [170, 56] },
+    { "id": "locale_catalogs", "type": "database",  "label": "JA / ZH / KO",  "sublabel": "206–542 KB each",             "pos": [550, 330], "size": [170, 56] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "awesome-mac@2.1.0", "wraps": ["awesome_mac", "en_catalog", "locale_catalogs"] }
+  ],
+  "connections": [
+    { "from": "npm_registry",    "to": "jonsd",           "label": "npm install",     "variant": "default",  "fromSide": "bottom", "toSide": "top"  },
+    { "from": "consumer",        "to": "jonsd",           "label": "require / import", "variant": "emphasis", "labelDy": -22 },
+    { "from": "jonsd",           "to": "awesome_mac",     "label": "depends on",       "variant": "default",  "fromSide": "right", "toSide": "left", "labelDy": -20 },
+    { "from": "awesome_mac",     "to": "en_catalog",      "label": "dist/",            "variant": "dashed",   "fromSide": "bottom", "toSide": "top"  },
+    { "from": "awesome_mac",     "to": "locale_catalogs", "label": "dist/",            "variant": "dashed",   "fromSide": "bottom", "toSide": "top"  }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Data Model",
+      "items": [
+        "Remark Markdown AST — heading, paragraph, list nodes",
+        "~2 000 app entries across 30+ macOS categories",
+        "mark.icons: oss / freeware / appstore badges"
+      ]
+    }
+  ]
+}

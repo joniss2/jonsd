@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "awesome-mac Catalog Query",
+    "quality_profile": "showcase",
+    "viewBox": [960, 600]
+  },
+  "lanes": [
+    { "id": "developer", "label": "Developer" },
+    { "id": "runtime",   "label": "Node.js Runtime" },
+    { "id": "pkg",       "label": "awesome-mac" },
+    { "id": "exception", "label": "Exception Path", "variant": "exception" }
+  ],
+  "phases": [
+    { "id": "setup", "label": "Setup",  "fromCol": 0, "toCol": 1 },
+    { "id": "load",  "label": "Load",   "fromCol": 2, "toCol": 2 },
+    { "id": "query", "label": "Query",  "fromCol": 3, "toCol": 5, "variant": "emphasis" }
+  ],
+  "mainPath": ["start", "install", "load", "catalog_json", "filter_cat", "traverse", "mark_data", "results"],
+  "nodes": [
+    { "id": "start",        "lane": "developer", "col": 0, "type": "external", "label": "Developer",    "sublabel": "write consumer code" },
+    { "id": "install",      "lane": "developer", "col": 1, "type": "cloud",    "label": "npm install",  "sublabel": "awesome-mac@2.1.0" },
+    { "id": "load",         "lane": "runtime",   "col": 2, "type": "backend",  "label": "Load Catalog", "sublabel": "require / import" },
+    { "id": "catalog_json", "lane": "pkg",       "col": 2, "type": "database", "label": "AST Array",    "sublabel": "~2 000 nodes" },
+    { "id": "filter_cat",   "lane": "runtime",   "col": 3, "type": "backend",  "label": "Filter",       "sublabel": "depth-2 headings" },
+    { "id": "not_found",    "lane": "exception", "col": 4, "type": "security", "label": "No Match",     "sublabel": "empty category" },
+    { "id": "traverse",     "lane": "runtime",   "col": 5, "type": "backend",  "label": "Read Items",   "sublabel": "listItem nodes" },
+    { "id": "mark_data",    "lane": "pkg",       "col": 5, "type": "database", "label": "mark object",  "sublabel": "title · url · icons" },
+    { "id": "results",      "lane": "developer", "col": 5, "type": "frontend", "label": "Results",      "sublabel": "apps by category" }
+  ],
+  "edges": [
+    { "from": "start",        "to": "install",      "variant": "emphasis" },
+    { "from": "install",      "to": "load",         "variant": "default",  "fromSide": "bottom", "toSide": "top",    "route": "drop" },
+    { "from": "load",         "to": "catalog_json", "variant": "default",  "fromSide": "bottom", "toSide": "top",    "route": "drop" },
+    { "from": "catalog_json", "to": "filter_cat",   "variant": "default",  "fromSide": "right",  "toSide": "bottom" },
+    { "from": "filter_cat",   "to": "traverse",     "variant": "emphasis", "role": "main" },
+    { "from": "filter_cat",   "to": "not_found",    "label": "no match",   "variant": "dashed",  "role": "error",    "fromSide": "bottom", "toSide": "top", "route": "drop" },
+    { "from": "traverse",     "to": "mark_data",    "variant": "default",  "fromSide": "bottom", "toSide": "top",    "route": "drop" },
+    { "from": "mark_data",    "to": "results",      "variant": "emphasis", "role": "return",     "fromSide": "right", "toSide": "right", "route": "outside-right" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Data Shape",
+      "items": [
+        "AST nodes: heading (depth 2/3), paragraph, list",
+        "Each listItem → mark.title, mark.url, mark.icons",
+        "Icon types: oss, freeware, appstore"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "jonsd API Data Flow",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "viewBox": [960, 680],
+    "views": [
+      {
+        "id": "catalog-apis",
+        "label": "Catalog listing",
+        "focus": ["catalog", "categories", "get_cat", "out_names", "out_cat"],
+        "note": "Follow AST heading nodes from catalog through categories() and getCategory() to their typed outputs."
+      },
+      {
+        "id": "search-apis",
+        "label": "Search and filter",
+        "focus": ["catalog", "search", "filter_icon", "out_search", "out_icon"],
+        "note": "Follow list traversal through search() and filterByIcon() to filtered mark[] results."
+      }
+    ]
+  },
+  "stages": [
+    { "label": "awesome-mac" },
+    { "label": "jonsd API" },
+    { "label": "Consumer Result" }
+  ],
+  "nodes": [
+    {
+      "id": "catalog",
+      "type": "database",
+      "label": "AST Catalog",
+      "sublabel": "awesome-mac.json",
+      "stage": 0,
+      "row": 1,
+      "tag": "~2 000 nodes"
+    },
+    {
+      "id": "categories",
+      "type": "backend",
+      "label": "categories()",
+      "sublabel": "depth-2 headings",
+      "stage": 1,
+      "row": 0
+    },
+    {
+      "id": "get_cat",
+      "type": "backend",
+      "label": "getCategory()",
+      "sublabel": "by name match",
+      "stage": 1,
+      "row": 1
+    },
+    {
+      "id": "search",
+      "type": "backend",
+      "label": "search()",
+      "sublabel": "title substring",
+      "stage": 1,
+      "row": 2
+    },
+    {
+      "id": "filter_icon",
+      "type": "backend",
+      "label": "filterByIcon()",
+      "sublabel": "icon type",
+      "stage": 1,
+      "row": 3
+    },
+    {
+      "id": "out_names",
+      "type": "frontend",
+      "label": "string[]",
+      "sublabel": "category names",
+      "stage": 2,
+      "row": 0,
+      "tag": "~30 categories"
+    },
+    {
+      "id": "out_cat",
+      "type": "frontend",
+      "label": "mark[]",
+      "sublabel": "apps by category",
+      "stage": 2,
+      "row": 1,
+      "tag": "filtered"
+    },
+    {
+      "id": "out_search",
+      "type": "frontend",
+      "label": "mark[]",
+      "sublabel": "apps by title",
+      "stage": 2,
+      "row": 2,
+      "tag": "matched"
+    },
+    {
+      "id": "out_icon",
+      "type": "frontend",
+      "label": "mark[]",
+      "sublabel": "apps by icon",
+      "stage": 2,
+      "row": 3,
+      "tag": "tagged"
+    }
+  ],
+  "flows": [
+    {
+      "from": "catalog",
+      "to": "categories",
+      "label": "heading nodes",
+      "variant": "dashed",
+      "route": "top-channel"
+    },
+    {
+      "from": "catalog",
+      "to": "get_cat",
+      "label": "headings + lists",
+      "variant": "dashed",
+      "route": "straight",
+      "labelAt": [208, 225]
+    },
+    {
+      "from": "catalog",
+      "to": "search",
+      "label": "list nodes",
+      "variant": "dashed",
+      "route": "vertical-channel"
+    },
+    {
+      "from": "catalog",
+      "to": "filter_icon",
+      "label": "list nodes",
+      "variant": "dashed",
+      "route": "bottom-channel"
+    },
+    {
+      "from": "categories",
+      "to": "out_names",
+      "label": "heading values",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "get_cat",
+      "to": "out_cat",
+      "label": "mark objects",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "search",
+      "to": "out_search",
+      "label": "mark objects",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "filter_icon",
+      "to": "out_icon",
+      "label": "mark objects",
+      "variant": "emphasis",
+      "route": "straight"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Data Shape",
+      "items": [
+        "AST array: heading nodes (depth 2 = category), list, listItem nodes",
+        "mark = listItem.children[0].mark → { title, url, icons[] }",
+        "Icon types: oss · freeware · app-store · awesome-list"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Query Functions",
+      "items": [
+        "categories() — collects depth-2 heading.value strings",
+        "getCategory(name) — slices from heading to next sibling heading",
+        "search(query) — case-insensitive substring on mark.title",
+        "filterByIcon(type) — matches any icon in mark.icons[]"
+      ]
+    }
+  ]
+}

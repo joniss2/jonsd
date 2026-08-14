@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "awesome-mac Install & Usage",
+    "quality_profile": "showcase",
+    "viewBox": [780, 480]
+  },
+  "participants": [
+    { "id": "developer", "type": "external", "label": "Developer" },
+    { "id": "project", "type": "frontend", "label": "ProjectApp" },
+    { "id": "npm_registry", "type": "cloud", "label": "npm Registry" },
+    { "id": "awesome_mac", "type": "database", "label": "awesome-mac", "sublabel": "JSON catalog" }
+  ],
+  "segments": [
+    { "from": 150, "to": 240, "label": "Install" },
+    { "from": 258, "to": 318, "label": "CommonJS" },
+    { "from": 336, "to": 396, "label": "ESM" }
+  ],
+  "messages": [
+    { "from": "developer",    "to": "project",      "y": 160, "label": "npm install",                     "variant": "emphasis" },
+    { "from": "project",      "to": "npm_registry",  "y": 194, "label": "resolve awesome-mac",             "variant": "default"  },
+    { "from": "npm_registry",  "to": "project",      "y": 228, "label": "awesome-mac@2.1.0 + dist/*.json", "variant": "return"   },
+    { "from": "project",      "to": "awesome_mac",   "y": 270, "label": "require(dist/awesome-mac.json)",  "variant": "default"  },
+    { "from": "awesome_mac",  "to": "project",       "y": 306, "label": "JSON catalog (CJS)",              "variant": "return"   },
+    { "from": "project",      "to": "awesome_mac",   "y": 348, "label": "import with { type: 'json' }",    "variant": "default"  },
+    { "from": "awesome_mac",  "to": "project",       "y": 384, "label": "JSON catalog (ESM)",              "variant": "return"   }
+  ],
+  "activations": [
+    { "participant": "project",      "from": 154, "to": 234, "type": "frontend" },
+    { "participant": "npm_registry", "from": 188, "to": 234, "type": "cloud"    },
+    { "participant": "awesome_mac",  "from": 264, "to": 312, "type": "database" },
+    { "participant": "awesome_mac",  "from": 342, "to": 390, "type": "database" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Two Usage Modes",
+      "items": [
+        "CommonJS: require(dist/awesome-mac.json)",
+        "ESM (Node ≥ 22): import with { type: 'json' }",
+        "Catalog: ~2 000 macOS apps as AST nodes"
+      ]
+    }
+  ]
+}
